@@ -12,12 +12,53 @@ import {
 import { Text } from "react-native";
 import { globalStyles } from "../globalStyles";
 import { Image } from "react-native";
-import { Camera, Location, Trash } from "../components/icons/Icons";
-import { useState } from "react";
+import { CameraIcon, Location, Trash } from "../components/icons/Icons";
+import { useEffect, useState } from "react";
+import { Camera } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+import { useNavigation } from "@react-navigation/native";
 
 export const CreatePostsScreen = () => {
+  const navigation = useNavigation();
+  const [photoName, setPhotoName] = useState("");
+  const [location, setLocation] = useState("");
   const [isOpenKeyboard, setIsOpenKeyboard] = useState(false);
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  const [hasMediaPermission, setHasMediaPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [photo, setPhoto] = useState(null);
 
+  useEffect(() => {
+    (async () => {
+      const cameraPermission = await Camera.requestCameraPermissionsAsync();
+      const mediaPermission = await MediaLibrary.requestPermissionsAsync();
+      setHasCameraPermission(cameraPermission.status === "granted");
+      setHasMediaPermission(mediaPermission.status === "granted");
+    })();
+  }, []);
+
+  const takePicture = async () => {
+    if (cameraRef) {
+      const { uri } = await cameraRef.takePictureAsync();
+      setPhoto(uri);
+      await MediaLibrary.createAssetAsync(uri);
+    }
+  };
+  if (hasCameraPermission === null) {
+    return (
+      <View style={{ flex: 1, backgroundColor: "white" }}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+  if (!hasCameraPermission) {
+    return (
+      <View style={{ flex: 1, backgroundColor: "white" }}>
+        <Text>No access to camera.</Text>
+      </View>
+    );
+  }
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -31,7 +72,7 @@ export const CreatePostsScreen = () => {
             globalStyles.container,
             {
               justifyContent: "flex-end",
-              paddingBottom: isOpenKeyboard? 55: 34,
+              paddingBottom: isOpenKeyboard ? 55 : 34,
               paddingLeft: 16,
               paddingRight: 16,
               paddingTop: 32,
@@ -39,21 +80,33 @@ export const CreatePostsScreen = () => {
           ]}
         >
           <View>
-            <View style={styles.photoWrapper}>
-              <View
-                style={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: 30,
-                  backgroundColor: "white",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
+            {!photo ? (
+              <Camera
+                style={styles.photoWrapper}
+                type={type}
+                ref={setCameraRef}
               >
-                <Camera />
+                <TouchableOpacity onPress={takePicture}>
+                  <View
+                    style={{
+                      width: 60,
+                      height: 60,
+                      borderRadius: 30,
+                      backgroundColor: "white",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <CameraIcon />
+                  </View>
+                </TouchableOpacity>
+                <Image />
+              </Camera>
+            ) : (
+              <View style={styles.photoWrapper}>
+                <Image source={{ uri: photo }} style={styles.photo} />
               </View>
-              <Image />
-            </View>
+            )}
             <Text style={styles.text}>Завантажте фото</Text>
             <View>
               <TextInput
@@ -64,6 +117,8 @@ export const CreatePostsScreen = () => {
                 placeholder="Назва..."
                 onFocus={() => setIsOpenKeyboard(true)}
                 onBlur={() => setIsOpenKeyboard(false)}
+                value={photoName}
+                onChangeText={setPhotoName}
               />
 
               <View
@@ -92,15 +147,22 @@ export const CreatePostsScreen = () => {
                   placeholder="Місцевість..."
                   onFocus={() => setIsOpenKeyboard(true)}
                   onBlur={() => setIsOpenKeyboard(false)}
+                  value={location}
+                  onChangeText={setLocation}
                 />
               </View>
             </View>
-            <TouchableOpacity style={globalStyles.button}>
+            <TouchableOpacity
+              style={globalStyles.button}
+              onPress={() => {
+                navigation.navigate("Home", { screen: "Posts" });
+              }}
+            >
               <Text style={globalStyles.buttonText}>Опубліковати</Text>
             </TouchableOpacity>
           </View>
           <View style={{ flex: 1 }} />
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=> {setPhoto(null)}}>
             <View
               style={{
                 // position: "absolute",
@@ -147,5 +209,10 @@ const styles = StyleSheet.create({
     borderColor: "#E8E8E8",
     fontSize: 16,
     marginBottom: 16,
+  },
+  photo: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 8,
   },
 });

@@ -11,6 +11,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 const Tab = createBottomTabNavigator();
 const TabNavigation = () => {
+
+
   return (
     <Tab.Navigator
       initialRouteName="Posts"

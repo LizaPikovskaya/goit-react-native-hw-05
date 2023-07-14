@@ -1,8 +1,10 @@
-import { Image, StyleSheet, Text } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
 import { Comments, Location } from "../components/icons/Icons";
+import { useNavigation } from "@react-navigation/native";
 
 const Post = ({ way, name, country, commentsNumber }) => {
+  const navigation = useNavigation()
   return (
     <View style={{marginBottom:32}}>
       <View style={{ marginBottom: 8 }}>
@@ -25,7 +27,7 @@ const Post = ({ way, name, country, commentsNumber }) => {
       </Text>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-          <Comments />
+         <TouchableOpacity onPress={()=> {navigation.navigate("Comments")}}> <Comments /></TouchableOpacity>
           <Text
             style={[
               styles.text,
