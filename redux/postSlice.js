@@ -3,27 +3,27 @@ import uuid from 'react-native-uuid';
 
 const postsInitialState = {
     posts: [
-  {
-    id: uuid.v4(),
-    imageUrl: require("../assets/images/sky.jpg"),
-    name: "Ліс",
-    commentsNumber: 0,
-    location: "Ivano-Frankivs'k Region, Ukraine",
-  },
-  {
-    id: uuid.v4(),
-    imageUrl: require("../assets/images/sunset.jpg"),
-    name: "Захід на Чорному морі",
-    commentsNumber: 0,
-    location: "Ukraine",
-  },
-  {
-    id: uuid.v4(),
-    imageUrl: require("../assets/images/house.jpg"),
-    name: "Старий будиночок у Венеції",
-    commentsNumber: 0,
-    location: "Ukraine",
-  },
+//   {
+//     id: uuid.v4(),
+//     imageUrl: "../assets/images/sky.jpg",
+//     name: "Ліс",
+//     commentsNumber: 0,
+//     location: "Ivano-Frankivs'k Region, Ukraine",
+//   },
+//   {
+//     id: uuid.v4(),
+//     imageUrl: "../assets/images/sunset.jpg",
+//     name: "Захід на Чорному морі",
+//     commentsNumber: 0,
+//     location: "Ukraine",
+//   },
+//   {
+//     id: uuid.v4(),
+//     imageUrl: "../assets/images/house.jpg",
+//     name: "Старий будиночок у Венеції",
+//     commentsNumber: 0,
+//     location: "Ukraine",
+//   },
 ]};
 export const postsSlice = createSlice({
   name: "posts",

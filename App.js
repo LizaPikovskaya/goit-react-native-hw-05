@@ -31,7 +31,7 @@ export default function App() {
   const MainStack = createStackNavigator();
   return (
     <Provider store={store}>
-      {/* <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}> */}
+      {/* <PersistGate loading={null} persistor={persistor}> */}
         <NavigationContainer>
           <MainStack.Navigator initialRouteName="Home">
             <MainStack.Screen

@@ -10,7 +10,7 @@ export const PostsScreen = () => {
   const posts = useSelector(selectPosts);
   console.log(posts);
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1,backgroundColor:'#fff' }}>
       <View
         style={[
           globalStyles.container,

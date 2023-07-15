@@ -13,7 +13,7 @@ const Post = ({ way, name, country, commentsNumber, coords }) => {
     <View style={{ marginBottom: 32 }}>
       <View style={{ marginBottom: 8 }}>
         <Image
-          source={way}
+          source={{uri: way}}
           resizeMode={"cover"}
           style={{ width: "100%", height: 240, borderRadius: 8 }}
         />
