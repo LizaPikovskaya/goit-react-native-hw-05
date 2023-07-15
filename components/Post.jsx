@@ -1,12 +1,16 @@
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
-import { Comments, Location } from "../components/icons/Icons";
+import { Comments, LocationIcon } from "../components/icons/Icons";
 import { useNavigation } from "@react-navigation/native";
+import * as Location from "expo-location";
+import { useState } from "react";
 
-const Post = ({ way, name, country, commentsNumber }) => {
-  const navigation = useNavigation()
+const Post = ({ way, name, country, commentsNumber, coords }) => {
+  const [location, setLocation] = useState(null);
+  const navigation = useNavigation();
+
   return (
-    <View style={{marginBottom:32}}>
+    <View style={{ marginBottom: 32 }}>
       <View style={{ marginBottom: 8 }}>
         <Image
           source={way}
@@ -27,7 +31,15 @@ const Post = ({ way, name, country, commentsNumber }) => {
       </Text>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-         <TouchableOpacity onPress={()=> {navigation.navigate("Comments")}}> <Comments /></TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Comments");
+            }}
+          >
+            <Text>
+              <Comments />
+            </Text>
+          </TouchableOpacity>
           <Text
             style={[
               styles.text,
@@ -39,8 +51,17 @@ const Post = ({ way, name, country, commentsNumber }) => {
             {commentsNumber}
           </Text>
         </View>
+
         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-          <Location />
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Map", { coords });
+            }}
+          >
+            <Text>
+              <LocationIcon />
+            </Text>
+          </TouchableOpacity>
           <Text
             style={[
               styles.text,

@@ -12,22 +12,27 @@ import {
 import { Text } from "react-native";
 import { globalStyles } from "../globalStyles";
 import { Image } from "react-native";
-import { CameraIcon, Location, Trash } from "../components/icons/Icons";
+import { CameraIcon, LocationIcon, Trash } from "../components/icons/Icons";
 import { useEffect, useState } from "react";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { addPost } from "../redux/postSlice";
+import * as Location from "expo-location";
 
 export const CreatePostsScreen = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const [photoName, setPhotoName] = useState("");
-  const [location, setLocation] = useState("");
+  const [locationName, setLocationName] = useState("");
   const [isOpenKeyboard, setIsOpenKeyboard] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [hasMediaPermission, setHasMediaPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
-  const [photo, setPhoto] = useState(null);
+  const [photoUri, setPhotoUri] = useState(null);
+  const [location, setLocation] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -38,10 +43,32 @@ export const CreatePostsScreen = () => {
     })();
   }, []);
 
+  const handlePublishPost = () => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+    
+      setLocation(coords)
+      console.log(coords);;
+    })();
+    dispatch(addPost({ photoName, locationName, photoUri, location }));
+    navigation.navigate("Home", { screen: "Posts" });
+    setPhotoName('')
+    setLocationName('')
+    setPhotoUri(null)
+
+  };
   const takePicture = async () => {
     if (cameraRef) {
       const { uri } = await cameraRef.takePictureAsync();
-      setPhoto(uri);
+      setPhotoUri(uri);
       await MediaLibrary.createAssetAsync(uri);
     }
   };
@@ -80,7 +107,7 @@ export const CreatePostsScreen = () => {
           ]}
         >
           <View>
-            {!photo ? (
+            {!photoUri ? (
               <Camera
                 style={styles.photoWrapper}
                 type={type}
@@ -104,7 +131,7 @@ export const CreatePostsScreen = () => {
               </Camera>
             ) : (
               <View style={styles.photoWrapper}>
-                <Image source={{ uri: photo }} style={styles.photo} />
+                <Image source={{ uri: photoUri }} style={styles.photo} />
               </View>
             )}
             <Text style={styles.text}>Завантажте фото</Text>
@@ -133,7 +160,7 @@ export const CreatePostsScreen = () => {
                   marginBottom: 32,
                 }}
               >
-                <Location />
+                <LocationIcon />
                 <TextInput
                   style={[
                     styles.input,
@@ -147,22 +174,24 @@ export const CreatePostsScreen = () => {
                   placeholder="Місцевість..."
                   onFocus={() => setIsOpenKeyboard(true)}
                   onBlur={() => setIsOpenKeyboard(false)}
-                  value={location}
-                  onChangeText={setLocation}
+                  value={locationName}
+                  onChangeText={setLocationName}
                 />
               </View>
             </View>
             <TouchableOpacity
               style={globalStyles.button}
-              onPress={() => {
-                navigation.navigate("Home", { screen: "Posts" });
-              }}
+              onPress={handlePublishPost}
             >
               <Text style={globalStyles.buttonText}>Опубліковати</Text>
             </TouchableOpacity>
           </View>
           <View style={{ flex: 1 }} />
-          <TouchableOpacity onPress={()=> {setPhoto(null)}}>
+          <TouchableOpacity
+            onPress={() => {
+              setPhotoUri(null);
+            }}
+          >
             <View
               style={{
                 // position: "absolute",

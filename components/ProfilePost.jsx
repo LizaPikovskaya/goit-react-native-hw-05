@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
-import { Comments, LikesIcon, Location } from "../components/icons/Icons";
+import { Comments, LikesIcon, LocationIcon } from "../components/icons/Icons";
 
 export const ProfilePost = ({ way, name, country, commentsNumber, likes }) => {
   return (
@@ -53,7 +53,7 @@ export const ProfilePost = ({ way, name, country, commentsNumber, likes }) => {
           </View>
         </View>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-          <Location />
+          <LocationIcon />
           <Text
             style={[
               styles.text,

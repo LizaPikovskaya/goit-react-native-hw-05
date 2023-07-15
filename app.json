@@ -19,22 +19,19 @@
         }
       ]
     ],
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
+      "bundleIdentifier": "com.yourcompany.goit-react-native-hw-05",
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        "googleMapsApiKey": "AIzaSyDOvJLEkORsqN3TuQ07jnOjTD0dDy2jl9Q"
       }
     },
     "android": {
+      "package": "com.yourcompany.goit-react-native-hw-05",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "config": {
-        "googleMapsApiKey": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
       }
     },
     "web": {

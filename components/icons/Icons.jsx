@@ -114,7 +114,7 @@ export function CameraIcon(props) {
   );
 }
 
-export function Location(props) {
+export function LocationIcon(props) {
   return (
     <Svg
       width={24}

@@ -1,10 +1,14 @@
-import { Image, StyleSheet, Text } from "react-native";
-import TabNavigation, { FocusedIcon } from "../components/TabNavigation";
+import { FlatList, Image, SafeAreaView, StyleSheet, Text } from "react-native";
+// import TabNavigation, { FocusedIcon } from "../components/TabNavigation";
 import { View, ScrollView } from "react-native";
 import { globalStyles } from "../globalStyles";
-import { Comments, Location } from "../components/icons/Icons";
 import Post from "../components/Post";
+import { useSelector } from "react-redux";
+import { selectPosts } from "../redux/selectors";
+
 export const PostsScreen = () => {
+  const posts = useSelector(selectPosts);
+  console.log(posts);
   return (
     <ScrollView style={{ flex: 1 }}>
       <View
@@ -51,7 +55,24 @@ export const PostsScreen = () => {
             </Text>
           </View>
         </View>
-        <Post
+        {/* <SafeAreaView style={{ flex: 1 }}> */}
+        <FlatList
+          data={posts}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <Post
+              // key={item.key}
+              way={item.imageUrl}
+              name={item.name}
+              commentsNumber={item.commentsNumber}
+              country={item.location}
+              coords={item.coords}
+            />
+          )}
+        ></FlatList>
+        {/* </SafeAreaView> */}
+
+        {/* <Post
           way={require("../assets/images/sky.jpg")}
           name={"Ліс"}
           commentsNumber={0}
@@ -65,10 +86,10 @@ export const PostsScreen = () => {
         />
         <Post
           way={require("../assets/images/house.jpg")}
-          name={"Захід на Чорному морі"}
+          name={"Старий будиночок у Венеції"}
           commentsNumber={0}
           country={"Ukraine"}
-        />
+        /> */}
       </View>
     </ScrollView>
   );
